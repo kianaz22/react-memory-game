@@ -1,38 +1,66 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-image: url(./bg2.jpg);
+  height: 100vh;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.app {
+  color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+}
+h1 {
+  margin-bottom: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+.container {
+  perspective: 1000px;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 5px;
+  width: 90vw;
+  height: calc(90vw * 1.14);
+  max-height: 467px;
+  max-width: 450px;
+  margin: 0 auto;
+}
+.card {
+  position: relative;
+  transition: transform 0.5s ease-in-out;
+  transform-style: preserve-3d;
+  transform: scale(1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.flip {
+  transform: rotateY(180deg);
+}
+.front-face,
+.back-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+.front-face {
+  transform: rotateY(180deg);
+}
+.timer {
+  margin-bottom: 0.5rem;
+}
+.score {
+  width: 90vw;
+  max-width: 450px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin-bottom: .5rem;
+}
+.MuiDialogActions-root{
+  justify-content: center!important;
 }

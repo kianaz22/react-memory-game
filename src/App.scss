@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-image: url(./pic/bg2.jpg);
+  background-size: cover;
+  height: 100vh;
+  color: white;
+  h1 {
+    font-family: "Delius Swash Caps", cursive;
+    margin: 1rem;
+    text-align: center;
+  }
+}
+@media screen and (max-width: 500px) {
+  body {
+    background-image: url(./pic/bg2small.jpg);
+  }
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2.5rem;
+}
+.game-container {
+  perspective: 1000px;
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 5px;
+  width: 90vw;
+  height: calc(90vw * 1.14);
+  max-height: 467px;
+  max-width: 410px;
+  .card {
+    position: relative;
+    transition: transform 0.5s ease-in-out;
+    transform-style: preserve-3d;
+    transform: scale(1);
+    cursor: pointer;
+  
+    .front-face,
+    .back-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 10px;
+    }
+    .front-face {
+      transform: rotateY(180deg);
+    }
+  }
+  .flip {
+    transform: rotateY(180deg);
+  }
+}
+@media screen and (min-width: 700px)and (min-height:1000px) {
+ .game-container{
+  max-height: 700.5px;
+  max-width: 615px;
+ }
+}
+.score-container {
+  display: flex;
+  flex-wrap: wrap;
+  font-family: "Delius Swash Caps", cursive;
+  width: 90vw;
+  max-width: 450px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  .timer {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.MuiDialogActions-root {
+  justify-content: center !important;
+}

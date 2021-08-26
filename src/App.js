@@ -1,18 +1,21 @@
-import './App.css';
+import './App.scss';
 import { useState, useEffect, useRef } from 'react'
-import flip from './flip.wav'
-import match from './match.wav'
-import victory from './victory.wav'
-import gameover from './gameover.wav'
+import flip from './audio/flip.mp3'
+import match from './audio/match.mp3'
+import victory from './audio/victory.mp3'
+import gameover from './audio/gameover.mp3'
 import { Dialog, DialogActions, DialogContent, DialogContentText, Button } from "@material-ui/core";
 import Card from './components/Card.js'
-import cardback from './cardback.jpg'
-import kh from './KH.jpg'
-import ad from './AD.jpg'
-import qs from './QS.jpg'
-import jc from './JC.jpg'
-import s5 from './S5.jpg'
-import d2 from './D2.jpg'
+import cardback from './pic/cardback.jpg'
+import kh from './pic/KH.jpg'
+import ad from './pic/AD.jpg'
+import qs from './pic/QS.jpg'
+import jc from './pic/JC.jpg'
+import s5 from './pic/S5.jpg'
+import d2 from './pic/D2.jpg'
+import h7 from './pic/7H.jpg'
+import as from './pic/AS.jpg'
+
 let cardsArray = [
   {
     image: kh, name: 'kh'
@@ -32,6 +35,14 @@ let cardsArray = [
   {
     image: d2, name: 'd2'
   },
+
+  {
+    image: h7, name: 'h7'
+  },
+  {
+    image: as, name: 'as'
+  },
+
 ]
 
 function shuffleCards(array) {
@@ -58,8 +69,8 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [dialogText, setDialogText] = useState('')
   const [dialogButton, setDialogButton] = useState('PLAY')
-  const [bestScore, setBestScore] = useState(
-    JSON.parse(localStorage.getItem("bestScore")) || Number.POSITIVE_INFINITY
+  const [topScore, setTopScore] = useState(
+    JSON.parse(localStorage.getItem("topScore")) || Number.POSITIVE_INFINITY
   );
   const interval = useRef(null);
 
@@ -73,16 +84,17 @@ function App() {
       clearInterval(interval.current)
       new Audio(victory).play()
       setShowModal(true);
-      const highScore = Math.min(moves, bestScore);
-      setBestScore(highScore);
-      localStorage.setItem("bestScore", highScore);
-      setDialogText(`YOU WON !  
-      moves: ${moves} 
-      Your Top score: ${bestScore}`)
+      if (moves<topScore){
+        setTopScore(moves)
+        localStorage.setItem("topScore", moves);
+        setDialogText(`YOU WON ! A new record : ${moves} moves`)
+      }
+      setDialogText('YOU WON !')
       setDialogButton('PLAY  AGAIN')
     }
   };
   const gameOver = () => {
+    console.log('go')
     clearInterval(interval.current)
     new Audio(gameover).play()
     setShowModal(true);
@@ -124,7 +136,11 @@ function App() {
   useEffect(() => {
     victoryCheck();
   }, [matchedCards]);
-
+  useEffect(() => {
+    if(timer===0){
+      gameOver()
+    }
+  }, [timer])
   const handleRestart = () => {
     setMatchedCards([]);
     setFlippedCards([]);
@@ -134,33 +150,26 @@ function App() {
 
     setCards(shuffleCards(cardsArray.concat(cardsArray)));
     setTimer(60)
-    setTimeout(() => {
-      gameOver()
-    }, 60000);
-    interval.current = setInterval(() => {
-      setTimer(timer => timer - 1)
+    interval.current = setInterval(()=>{
+      setTimer(timer=>timer-1)
     }, 1000);
   };
-
+  
   return (
     <div className="app">
-      <h1>Memory Game</h1>
-      <div className="score">
-        <h3 className="moves">
-          Moves: {moves}
-        </h3>
-        <h2 className='timer'>
+      <div className='score-container'>
+      <h2 className='timer'>
           Time : {timer}
         </h2>
-        {localStorage.getItem("bestScore") && (
-          <h3 className="high-score">
-            Top Score: {bestScore}
-          </h3>
-        )}
+        <h3 className="moves">
+          Moves {moves}
+        </h3>
+        <h3 className="high-score">
+          Top Score {localStorage.getItem("topScore")}
+        </h3>
       </div>
-
-      <div className="container">
-
+      
+      <div className="game-container">
         {cards.map((card, index) => {
           return (
             <Card
@@ -176,8 +185,6 @@ function App() {
           );
         })}
       </div>
-
-
       <Dialog
         open={showModal}
         disableBackdropClick
@@ -190,7 +197,7 @@ function App() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleRestart} color="primary">
+          <Button onClick={handleRestart} color="default" variant="outlined">
             {dialogButton}
           </Button>
         </DialogActions>
@@ -203,90 +210,3 @@ export default App
 
 
 
-
-
-// function App() {
-//   const [freezeBoard, setFreezeBoard] = useState(false)
-//   const [flippedCards, setFlippedCards] = useState([])
-//   const [disabledCards, setDisabledCards] = useState([])
-//   cardsArray = cardsArray.concat(cardsArray)
-
-//   // useEffect(() => {
-//   //   shuffle(cardsArray)
-//   // }, [])
-
-
-//   useEffect(() => {
-//     console.log(flippedCards)
-//     if (flippedCards.length>1) 
-//       checkForMatch();
-//   }, [flippedCards])
-
-//   function flipCard(index) {
-//     console.log('flipCard')
-//     if (freezeBoard) return;
-//     if (flippedCards.includes(index)) return;
-
-//     setFlippedCards(flippedCards => [...flippedCards, index])
-//   }
-//   function checkForMatch() {
-//     console.log('check', flippedCards)
-//     const [first,second] = flippedCards
-//     if (cardsArray[first].name === cardsArray[second].name) {
-//       console.log('disable')
-//       disableCards();
-//       //match music
-//     }
-//     else { flipBack(); }
-//   }
-//   function disableCards() {
-//     setDisabledCards(disabledCards => [...disabledCards, flippedCards[0],flippedCards[1]])
-//     setFlippedCards([])
-//   }
-//   function flipBack() {
-//     console.log('flipback')
-//     setTimeout(() => {
-//       setFlippedCards([]);
-//     }, 1000);
-//   }
-//   function resetBoard() {
-//     console.log('reset')
-//     setFreezeBoard(false);
-//     setFlippedCards([]);
-//   }
-
-//   function shuffle(array) {
-//     var currentIndex = array.length, temporaryValue, randomIndex;
-
-//     // While there remain elements to shuffle...
-//     while (0 !== currentIndex) {
-
-//       // Pick a remaining element...
-//       randomIndex = Math.floor(Math.random() * currentIndex);
-//       currentIndex -= 1;
-
-//       // And swap it with the current element.
-//       temporaryValue = array[currentIndex];
-//       array[currentIndex] = array[randomIndex];
-//       array[randomIndex] = temporaryValue;
-//     }
-
-//     return array;
-//   }
-
-//   return (
-//     <div className="app">
-//       <h1>Memory Game</h1>
-//       <div className="container">
-
-//         {cardsArray.map((card, index) =>
-//           <Card card={card} key={index} index={index} cardback={cardback} 
-//           flipCard={flipCard} disabledCards={disabledCards} flippedCards={flippedCards} />
-//         )}
-
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default App;

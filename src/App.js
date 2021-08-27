@@ -76,8 +76,9 @@ function App() {
 
   useEffect(() => {
     setShowModal(true)
-    setDialogText('you have 60 seconds')
+    setDialogText('you have 60 seconds to find all matching cards!')
   }, [])
+
 
   const victoryCheck = () => {
     if (matchedCards.length === cardsArray.length) {
@@ -89,7 +90,8 @@ function App() {
         localStorage.setItem("topScore", moves);
         setDialogText(`YOU WON ! A new record : ${moves} moves`)
       }
-      setDialogText('YOU WON !')
+      else 
+        setDialogText('YOU WON !')
       setDialogButton('PLAY  AGAIN')
     }
   };
@@ -136,18 +138,19 @@ function App() {
   useEffect(() => {
     victoryCheck();
   }, [matchedCards]);
+
   useEffect(() => {
     if(timer===0){
       gameOver()
     }
   }, [timer])
+
   const handleRestart = () => {
     setMatchedCards([]);
     setFlippedCards([]);
     setShowModal(false);
     setMoves(0);
     setFreezeBoard(false);
-
     setCards(shuffleCards(cardsArray.concat(cardsArray)));
     setTimer(60)
     interval.current = setInterval(()=>{

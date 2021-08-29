@@ -64,22 +64,62 @@ function App() {
   const [flippedCards, setFlippedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
   const [freezeBoard, setFreezeBoard] = useState(false);
+  
   const [moves, setMoves] = useState(0);
   const [timer, setTimer] = useState(60)
+  const [topScore, setTopScore] = useState(
+    JSON.parse(localStorage.getItem("topScore")) || Number.POSITIVE_INFINITY);
+
   const [showModal, setShowModal] = useState(false);
   const [dialogText, setDialogText] = useState('')
   const [dialogButton, setDialogButton] = useState('PLAY')
-  const [topScore, setTopScore] = useState(
-    JSON.parse(localStorage.getItem("topScore")) || Number.POSITIVE_INFINITY
-  );
+  
   const interval = useRef(null);
 
   useEffect(() => {
     setShowModal(true)
     setDialogText('you have 60 seconds to find all matching cards!')
   }, [])
+  useEffect(() => {
+    if (flippedCards.length === 2) {
+      setTimeout(check, 500);
+    }
+
+  }, [flippedCards]);
+  useEffect(() => {
+    victoryCheck();
+  }, [matchedCards]);
+
+  useEffect(() => {
+    if(timer===0){
+      gameOver()
+    }
+  }, [timer])
 
 
+  const flipCard = (index) => {
+    new Audio(flip).play()
+    if (flippedCards.length === 1) {
+      setFlippedCards((flippedCards) => [...flippedCards, index]);
+      setMoves((moves) => moves + 1);
+      setFreezeBoard(true);
+    } else {
+      setFlippedCards([index]);
+    }
+  };
+  const check = () => {
+    const [first, second] = flippedCards;
+    setFreezeBoard(false);
+    if (cards[first].name === cards[second].name) {
+      setMatchedCards(matchedCards => [...matchedCards, cards[first].name]);
+      new Audio(match).play()
+      setFlippedCards([]);
+      return;
+    }
+    setTimeout(() => {
+      setFlippedCards([]);
+    }, 500);
+  };
   const victoryCheck = () => {
     if (matchedCards.length === cardsArray.length) {
       clearInterval(interval.current)
@@ -103,48 +143,6 @@ function App() {
     setDialogText('GAME OVER')
     setDialogButton('PLAY  AGAIN')
   }
-
-  const check = () => {
-    const [first, second] = flippedCards;
-    setFreezeBoard(false);
-    if (cards[first].name === cards[second].name) {
-      setMatchedCards(matchedCards => [...matchedCards, cards[first].name]);
-      new Audio(match).play()
-      setFlippedCards([]);
-      return;
-    }
-    setTimeout(() => {
-      setFlippedCards([]);
-    }, 500);
-  };
-  const flipCard = (index) => {
-    new Audio(flip).play()
-    if (flippedCards.length === 1) {
-      setFlippedCards((flippedCards) => [...flippedCards, index]);
-      setMoves((moves) => moves + 1);
-      setFreezeBoard(true);
-    } else {
-      setFlippedCards([index]);
-    }
-  };
-
-  useEffect(() => {
-    if (flippedCards.length === 2) {
-      setTimeout(check, 300);
-    }
-
-  }, [flippedCards]);
-
-  useEffect(() => {
-    victoryCheck();
-  }, [matchedCards]);
-
-  useEffect(() => {
-    if(timer===0){
-      gameOver()
-    }
-  }, [timer])
-
   const handleRestart = () => {
     setMatchedCards([]);
     setFlippedCards([]);

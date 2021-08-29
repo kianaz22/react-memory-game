@@ -1,70 +1,36 @@
 # React Memory Game
-![Getting Started](src/pic/flowchart.png)
+![flowchart](src/pic/flowchart.png)
+![screenshot](src/pic/screenshot.png)
 
 
-## Available Scripts
+## How does the code work ?
+*gameOver()* activates if the game isn't won in 60 seconds.
 
-In the project directory, you can run:
+state *topScore* checks local storage for any previous topscores.
 
-### `npm start`
+clicking a card activates *handleClick()* which checks if  *flippedcards[ ]* includes the card (if the card is already flipped). if not, *flipCard()* activates. the card stays flipped. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+*flipCard()* adds the card to *flippedcards[ ]*. if the array length reaches 2(if a second card is flipped), *check()* activates. state *freezeBoard* prevents more card flips untill *check()* is done(0.5 second).also state *moves* increases by 1.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+*check()* compares the cards inside *flippedcards[]*. if their names match, it'll be added to *matchedCards[ ]*. if not,they flip back.
 
-### `npm test`
+updating *matchedCards[ ]* activates *vicoryCheck()*, which checks if *matchedCards[ ]*'s length is the number of total cards. if yes the game is won. if there's a new *topScore*(lowest number of moves) it will be saved in local storage.
+the interval for *timer* is cleared.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*handleRestart()* resets all states to initial values , so the cards are flipped back and shuffled. it also sets a new interval for the timer.
 
-### `npm run build`
+## CSS Challenges
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+preventing the cards from stretching on diffrent screen sizes.  
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+solution: keeping a fixed resolution on the game board along with max-width and max-height.  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+.game-container {  
+width: 90vw;  
+height: calc(90vw * 1.14);  
+max-height: 467px;  
+max-width: 410px;   
+}
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
